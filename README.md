@@ -26,13 +26,13 @@ Hardware testing has been performed on Ubuntu 20.04, 21.10, and 22.04.
 
 ### Prebuilt Ubuntu packages
 
-Release-mode amd64 Debian packages are available under `dist/` for Ubuntu 24.04 and 26.04. Install the matching package with:
+Release-mode amd64 Debian packages for Ubuntu 24.04 and 26.04 are attached to the GitHub `v0.1.3` release and included under `dist/` in the source tree. Install the matching package with:
 
 ```sh
-sudo apt install ./dist/ubuntu-24.04/cherrymxboard30s-rgb_0.1.2-1_amd64-ubuntu24.04.deb
+sudo apt install ./dist/ubuntu-24.04/cherrymxboard30s-rgb_0.1.3-1_amd64-ubuntu24.04.deb
 ```
 
-For Ubuntu 26.04, use the corresponding package from `dist/ubuntu-26.04/`. The packages include a udev rule and declare their runtime dependencies; install with `apt` so dependencies are resolved. These packages have not been validated with physical keyboard hardware. The checked-in packages predate support for product ID `00dd`; use a current source installation or add the corresponding udev rule manually to run that model without `sudo`.
+For Ubuntu 26.04, use `sudo apt install ./dist/ubuntu-26.04/cherrymxboard30s-rgb_0.1.3-1_amd64-ubuntu26.04.deb`. The packages include udev rules for product IDs `046a:0079` and `046a:00dd` and declare their runtime dependencies; install with `apt` so dependencies are resolved. USB lighting behavior has not been validated with physical keyboard hardware.
 
 ## Build & Install
 

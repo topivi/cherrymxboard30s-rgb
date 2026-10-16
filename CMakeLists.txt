@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cherrymxboard30s-rgb VERSION 0.1.2)
+project(cherrymxboard30s-rgb VERSION 0.1.3)
 
 include(CTest)
 enable_testing()
