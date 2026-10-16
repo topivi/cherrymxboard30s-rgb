@@ -29,7 +29,7 @@ SOFTWARE.
 static char* LIGHTING_MODE_STRS[] = {
     "Wave",
     "Spectrum",
-    "Breating",
+    "Breathing",
     "Rolling",
     "Curve",
     "Scan",
