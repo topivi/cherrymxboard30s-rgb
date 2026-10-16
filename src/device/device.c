@@ -198,7 +198,8 @@ void device_find(args_t* args, struct libusb_device_handle** handleptr)
     }
 
     uint16_t search_vendor = args->vendor_id != -1 ? args->vendor_id : DEFAULT_VENDOR_ID;
-    uint16_t search_product = args->product_id != -1 ? args->product_id : DEFAULT_PRODUCT_ID;
+    bool search_explicit_product = args->product_id != -1;
+    uint16_t search_product = search_explicit_product ? args->product_id : DEFAULT_PRODUCT_ID;
 
     int ind_i = 0;
     int indices[found];
@@ -222,7 +223,9 @@ void device_find(args_t* args, struct libusb_device_handle** handleptr)
             exit(EXIT_FAILURE);
         }
 
-        if (dev_dsc.idVendor == search_vendor && dev_dsc.idProduct == search_product)
+        if (dev_dsc.idVendor == search_vendor
+            && (dev_dsc.idProduct == search_product
+                || (!search_explicit_product && dev_dsc.idProduct == ALTERNATE_PRODUCT_ID)))
         {
             indices[ind_i++] = i;
         }
