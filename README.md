@@ -32,7 +32,7 @@ Release-mode amd64 Debian packages for Ubuntu 24.04 and 26.04 are attached to th
 sudo apt install ./dist/ubuntu-24.04/cherrymxboard30s-rgb_0.1.3-1_amd64-ubuntu24.04.deb
 ```
 
-For Ubuntu 26.04, use `sudo apt install ./dist/ubuntu-26.04/cherrymxboard30s-rgb_0.1.3-1_amd64-ubuntu26.04.deb`. The packages include udev rules for product IDs `046a:0079` and `046a:00dd` and declare their runtime dependencies; install with `apt` so dependencies are resolved. USB lighting behavior has not been validated with physical keyboard hardware.
+For Ubuntu 26.04, use `sudo apt install ./dist/ubuntu-26.04/cherrymxboard30s-rgb_0.1.3-1_amd64-ubuntu26.04.deb`. The packages include udev rules for product IDs `046a:0079` and `046a:00dd` and declare their runtime dependencies; install with `apt` so dependencies are resolved. USB lighting behavior has been validated with physical keyboard hardware model CHERRY G80-3000N TKL RGB.
 
 ## Build & Install
 
