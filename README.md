@@ -24,6 +24,16 @@ CI is configured to build and run CLI smoke tests on Ubuntu 22.04, 24.04, and 26
 
 Hardware testing has been performed on Ubuntu 20.04, 21.10, and 22.04.
 
+### Prebuilt Ubuntu packages
+
+Release-mode amd64 Debian packages are available under `dist/` for Ubuntu 24.04 and 26.04. Install the matching package with:
+
+```sh
+sudo apt install ./dist/ubuntu-24.04/cherrymxboard30s-rgb_0.1.2-1_amd64-ubuntu24.04.deb
+```
+
+For Ubuntu 26.04, use the corresponding package from `dist/ubuntu-26.04/`. The packages include the udev rule and declare their runtime dependencies; install with `apt` so dependencies are resolved. These packages have not been validated with physical keyboard hardware.
+
 ## Build & Install
 
 ### Build requirements
