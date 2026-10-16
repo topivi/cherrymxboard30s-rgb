@@ -1,0 +1,18 @@
+# Ubuntu 24.04 and 26.04 Support Plan
+
+1. **Make the CMake baseline compatible with current CMake.** **Done:** `CMakeLists.txt` declares `cmake_minimum_required(VERSION 3.5)`, the minimum needed for compatibility with CMake 4, and explicitly selects required C11 with GNU extensions enabled to preserve the existing variable-length array and GNU integer types. With the missing `libusb-1.0-0-dev` dependency installed, configuration and compilation succeed locally with CMake 3.28.3 and GCC 13.3.0.
+
+2. **Add CI coverage for both releases.** **Done:** consolidated the workflows into `.github/workflows/ubuntu.yml` with pinned `ubuntu-22.04`, `ubuntu-24.04`, and `ubuntu-26.04` matrix entries. Ubuntu 20.04 is removed from CI. The workflow installs `cmake`, `pkg-config`, and `libusb-1.0-0-dev`, then configures and builds with CMake. The official runner-image docs list the target releases: [24.04](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md) and [26.04](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2604-Readme.md).
+
+3. **Add hardware-independent smoke coverage.** **Done:** registered CTest smoke tests for `--version` and help output, plus unit tests covering argument defaults, option parsing and clamping, lighting defaults, and all lighting mode names. CI runs them on every Ubuntu matrix entry. Select a single test with `ctest --test-dir build -R '<test-name>' --output-on-failure`. Hosted runners cannot verify USB communication, so keep a real-keyboard check as a separate manual acceptance step.
+
+4. **Verify installation and USB access on actual systems.** On one machine per target release, install and run the application with the keyboard attached. Confirm the udev rule is installed and applied, the app can access the device without `sudo`, and a known lighting command still works. The CMake install runs `udevadm` commands, so verify the full install path—not just compilation.
+
+   **Post-install hardware test set:**
+
+   - **Implemented:** `tests/manual/hardware_test.sh` runs the installed executable (or an explicit path) without `sudo`, checks that a `046a:0079` USB device is present, pauses for visual confirmation after every command, and writes a report with OS, device, user, process exit codes, and pass/fail/skip results.
+   - Test coverage includes static red/green/blue and mixed RGB at brightness 1 and 4; every implemented dynamic mode (`wave`, `spectrum`, `breathing`, `rolling`, `curve`, `scan`, `radiation`, `ripples`, `single_key`) at speeds 0 through 4; explicit versus random wave color; default versus explicit USB IDs; and verbose output. `custom` remains excluded until implemented.
+   - Run the full suite or choose a group with `--group static|modes|random|target|verbose`; use `--list` to inspect cases without sending device commands. Every case still needs the operator's visual assessment; a successful process exit alone does not verify the keyboard changed correctly.
+   - **Pending hardware execution:** run the suite on real hardware on Ubuntu 24.04 and 26.04, and retain the 22.04 run as baseline coverage. Review and retain the reports to document OS version, keyboard identification, permissions, and observations.
+
+5. **Update the README and workflow references.** **Done:** the badge points to the consolidated workflow; the README distinguishes Ubuntu CI build/CLI smoke coverage (22.04, 24.04, 26.04) from hardware-tested releases (20.04, 21.10, 22.04), and documents CMake, compiler/Make, pkg-config, and libusb development prerequisites with current configure/build/install commands.

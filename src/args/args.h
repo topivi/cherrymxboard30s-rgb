@@ -37,19 +37,19 @@ typedef struct {
      * @brief Red part of the RGB value to set.
      *
      */
-    u_int8_t red;
+    uint8_t red;
 
     /**
      * @brief Red part of the RGB value to set.
      *
      */
-    u_int8_t green;
+    uint8_t green;
 
     /**
      * @brief Red part of the RGB value to set.
      *
      */
-    u_int8_t blue;
+    uint8_t blue;
 
     /**
      * @brief The way of displaying the color on the keyboard. I.e. STATIC, WAVE, CURVE etc.

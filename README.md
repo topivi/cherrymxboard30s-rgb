@@ -1,7 +1,6 @@
 # CherryMXBoard30s RGB
 
-[![Ubuntu 20.04 Build](https://github.com/luv4bytes/cherrymxboard30s-rgb/actions/workflows/ubuntu-20.04.yml/badge.svg)](https://github.com/luv4bytes/cherrymxboard30s-rgb/actions/workflows/ubuntu-20.04.yml)
-[![Ubuntu 22.04 Build](https://github.com/luv4bytes/cherrymxboard30s-rgb/actions/workflows/ubuntu-22.04.yml/badge.svg)](https://github.com/luv4bytes/cherrymxboard30s-rgb/actions/workflows/ubuntu-22.04.yml)
+[![Ubuntu 22.04, 24.04 & 26.04 Build](https://github.com/luv4bytes/cherrymxboard30s-rgb/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/luv4bytes/cherrymxboard30s-rgb/actions/workflows/ubuntu.yml)
 
 Please consider using [cherryrgb-rs](https://github.com/skraus-dev/cherryrgb-rs) by @skraus-dev ([Sebastian Kraus](https://github.com/skraus-dev)) for a more robust and versatile solution.
 
@@ -19,33 +18,73 @@ Currently missing:
 
 - Custom
 
-### Tested on
+### Ubuntu compatibility
 
-- Ubuntu 20.04  
-- Ubuntu 21.10
-- Ubuntu 22.04
+CI is configured to build and run CLI smoke tests on Ubuntu 22.04, 24.04, and 26.04. This does not verify USB communication with a physical keyboard on those releases.
+
+Hardware testing has been performed on Ubuntu 20.04, 21.10, and 22.04.
+
+### Prebuilt Ubuntu packages
+
+Release-mode amd64 Debian packages are available under `dist/` for Ubuntu 24.04 and 26.04. Install the matching package with:
+
+```sh
+sudo apt install ./dist/ubuntu-24.04/cherrymxboard30s-rgb_0.1.2-1_amd64-ubuntu24.04.deb
+```
+
+For Ubuntu 26.04, use the corresponding package from `dist/ubuntu-26.04/`. The packages include the udev rule and declare their runtime dependencies; install with `apt` so dependencies are resolved. These packages have not been validated with physical keyboard hardware.
 
 ## Build & Install
 
-### Requirements
+### Build requirements
 
-- libusb-1.0-0
-- libusb-1.0-0-dev
+- CMake 3.5 or newer
+- A C compiler and Make (`build-essential` on Ubuntu)
+- `pkg-config`
+- `libusb-1.0-0-dev`
 
-```
-mkdir -p build
-cd build
-cmake -DCMAKE_BUILD_TYPE={BuildType} ..
+On Ubuntu, install the dependencies with:
 
-# For a simple build
-make
-
-# For installing
-sudo make install
-
+```sh
+sudo apt-get install build-essential cmake pkg-config libusb-1.0-0-dev
 ```
 
-The easiest and recommended way to install is using *sudo make install*.
+Configure and build:
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+Install with:
+
+```sh
+sudo cmake --install build
+```
+
+Run the CLI smoke tests and unit tests with:
+
+```sh
+ctest --test-dir build --output-on-failure
+```
+
+To run one test, pass its name as a regular expression, for example:
+
+```sh
+ctest --test-dir build -R '^args-parse-and-clamp$' --output-on-failure
+```
+
+### Manual hardware tests
+
+After installing the program and connecting the keyboard, run the interactive hardware test set as your normal user (not with `sudo`):
+
+```sh
+tests/manual/hardware_test.sh
+```
+
+It prompts for visual confirmation after each lighting command and writes a timestamped report in the current directory. The full run checks static colors and brightness, all implemented dynamic modes at speeds 0 through 4, random versus explicit wave colors, default and explicit USB IDs, and verbose mode. `custom` is excluded because its handler is not implemented. The last command's lighting remains active until changed again.
+
+Use `--group static`, `--group modes`, `--group random`, `--group target`, or `--group verbose` to run a subset. List the cases without sending USB commands with `tests/manual/hardware_test.sh --list`; pass the installed executable path as the final argument if it is not on `PATH`. Use `--report FILE` to choose a report path. The script checks that USB device `046a:0079` is connected, but every case still requires visual confirmation.
 
 ## Usage
 
