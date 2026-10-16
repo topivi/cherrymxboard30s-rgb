@@ -27,7 +27,8 @@ SOFTWARE. */
 #include "../args/args.h"
 
 #define DEFAULT_VENDOR_ID 0x046a  // Cherry GmbH
-#define DEFAULT_PRODUCT_ID 0x0079 // MX Board 3.0 s (Unknown)
+#define DEFAULT_PRODUCT_ID 0x0079 // MX Board 3.0 S
+#define ALTERNATE_PRODUCT_ID 0x00dd // CHERRY Keyboard
 
 /**
  * @brief Sets up libusb.

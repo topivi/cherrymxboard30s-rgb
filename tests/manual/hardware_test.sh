@@ -120,7 +120,7 @@ fi
 if [[ $group == all || $group == target ]]; then
     add_test target-default "Target the default Cherry USB device" static 4 \
         4 "--red 64 --green 128 --blue 192" ""
-    add_test target-explicit "Target USB vendor 0x046a and product 0x0079" static 4 \
+    add_test target-explicit "Target the detected Cherry USB product explicitly" static 4 \
         4 "--red 64 --green 128 --blue 192" ""
 fi
 
@@ -148,19 +148,21 @@ if ((EUID == 0)); then
 fi
 
 declare -a matching_devices=()
+declare -a matching_product_ids=()
 shopt -s nullglob
 for device_path in /sys/bus/usb/devices/*; do
     [[ -r $device_path/idVendor && -r $device_path/idProduct ]] || continue
     read -r vendor_id < "$device_path/idVendor"
     read -r product_id < "$device_path/idProduct"
-    if [[ ${vendor_id,,} == 046a && ${product_id,,} == 0079 ]]; then
+    if [[ ${vendor_id,,} == 046a && ( ${product_id,,} == 0079 || ${product_id,,} == 00dd ) ]]; then
         matching_devices+=("$device_path")
+        matching_product_ids+=("${product_id,,}")
     fi
 done
 shopt -u nullglob
 
 if ((${#matching_devices[@]} == 0)); then
-    printf 'No USB device with vendor/product ID 046a:0079 was found. Connect the keyboard and retry.\n' >&2
+    printf 'No supported Cherry USB device (046a:0079 or 046a:00dd) was found. Connect the keyboard and retry.\n' >&2
     exit 2
 fi
 
@@ -191,8 +193,8 @@ set +o noclobber
         . /etc/os-release
         printf 'Operating system: %s\n' "${PRETTY_NAME:-unknown}"
     fi
-    for device_path in "${matching_devices[@]}"; do
-        printf 'USB device: %s (046a:0079)\n' "$device_path"
+    for index in "${!matching_devices[@]}"; do
+        printf 'USB device: %s (046a:%s)\n' "${matching_devices[index]}" "${matching_product_ids[index]}"
     done
     printf '\nResults:\n'
 } >> "$report_path"
@@ -228,7 +230,7 @@ for index in "${!test_names[@]}"; do
 
     case "$name" in
         target-explicit)
-            command_args+=(--vendor-id 0x046a --product-id 0x0079)
+            command_args+=(--vendor-id 0x046a --product-id "0x${matching_product_ids[0]}")
             ;;
         verbose-output)
             command_args+=(-v)

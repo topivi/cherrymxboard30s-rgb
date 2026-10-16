@@ -32,7 +32,7 @@ Release-mode amd64 Debian packages are available under `dist/` for Ubuntu 24.04 
 sudo apt install ./dist/ubuntu-24.04/cherrymxboard30s-rgb_0.1.2-1_amd64-ubuntu24.04.deb
 ```
 
-For Ubuntu 26.04, use the corresponding package from `dist/ubuntu-26.04/`. The packages include the udev rule and declare their runtime dependencies; install with `apt` so dependencies are resolved. These packages have not been validated with physical keyboard hardware.
+For Ubuntu 26.04, use the corresponding package from `dist/ubuntu-26.04/`. The packages include a udev rule and declare their runtime dependencies; install with `apt` so dependencies are resolved. These packages have not been validated with physical keyboard hardware. The checked-in packages predate support for product ID `00dd`; use a current source installation or add the corresponding udev rule manually to run that model without `sudo`.
 
 ## Build & Install
 
@@ -84,7 +84,9 @@ tests/manual/hardware_test.sh
 
 It prompts for visual confirmation after each lighting command and writes a timestamped report in the current directory. The full run checks static colors and brightness, all implemented dynamic modes at speeds 0 through 4, random versus explicit wave colors, default and explicit USB IDs, and verbose mode. `custom` is excluded because its handler is not implemented. The last command's lighting remains active until changed again.
 
-Use `--group static`, `--group modes`, `--group random`, `--group target`, or `--group verbose` to run a subset. List the cases without sending USB commands with `tests/manual/hardware_test.sh --list`; pass the installed executable path as the final argument if it is not on `PATH`. Use `--report FILE` to choose a report path. The script checks that USB device `046a:0079` is connected, but every case still requires visual confirmation.
+The default device search supports product IDs `046a:0079` and `046a:00dd`; explicit `--product-id` selection still targets only the requested product. The udev rules grant access to both IDs. After installing or changing the rules, reconnect the keyboard before running without `sudo`.
+
+Use `--group static`, `--group modes`, `--group random`, `--group target`, or `--group verbose` to run a subset. List the cases without sending USB commands with `tests/manual/hardware_test.sh --list`; pass the installed executable path as the final argument if it is not on `PATH`. Use `--report FILE` to choose a report path. The script checks that either supported USB device (`046a:0079` or `046a:00dd`) is connected and its explicit-ID case targets the detected product, but every case still requires visual confirmation.
 
 ## Usage
 

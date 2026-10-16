@@ -23,7 +23,7 @@ Run one registered test by name with:
 ctest --test-dir build -R '<test-name>' --output-on-failure
 ```
 
-Manual keyboard acceptance tests live in `tests/manual/hardware_test.sh`. They require the physical `046a:0079` device and an interactive terminal; run them as a regular user, not with `sudo`.
+Manual keyboard acceptance tests live in `tests/manual/hardware_test.sh`. They require a supported physical `046a:0079` or `046a:00dd` device and an interactive terminal; run them as a regular user, not with `sudo`.
 
 There is no configured lint target or lint command. The current compiler warning option is `-Wall`.
 
@@ -36,7 +36,7 @@ This is a command-line C application that sends lighting commands to the Cherry 
 - `src/device/device.c` initializes libusb, finds the keyboard by vendor/product ID (defaults are declared in `device.h`), claims its interfaces, chooses the lighting-mode handler, sends the USB control transfer, and releases resources.
 - Each mode handler builds the keyboard's protocol payload; `src/device/lighting.c` initializes the shared lighting structure and maps modes to display names.
 - `src/help/` formats usage/version output; `src/log/` provides timestamped info, debug, and error output.
-- `50-cherrymx.rules` grants access to USB device `046a:0079`. The CMake install also places this rule in `/etc/udev/rules.d` and reloads udev.
+- `50-cherrymx.rules` grants access to USB devices `046a:0079` and `046a:00dd`. The CMake install also places this rule in `/etc/udev/rules.d` and reloads udev.
 
 ## Codebase conventions
 
