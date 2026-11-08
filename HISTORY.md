@@ -1,5 +1,9 @@
 # Session History
 
+## 2026-11-08: Confirm stable use
+
+- The user reported testing and using the software for several weeks without encountering any issues.
+
 ## 2026-10-16: Support Cherry keyboard product ID 00dd
 
 - Investigated reports that the application required `sudo` and that the keyboard enumerated as USB `046a:00dd`, rather than the supported `046a:0079`.
